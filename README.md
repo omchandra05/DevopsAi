@@ -110,6 +110,8 @@ gemini-chatbot/
 📸 Screenshots
 <div align="center"> <img src="https://www.google.com/search?q=https://via.placeholder.com/400x200%3Ftext%3DMobile%2BView" alt="Mobile View" width="45%"> <img src="https://www.google.com/search?q=https://via.placeholder.com/400x200%3Ftext%3DSettings%2BPanel" alt="Settings Panel" width="45%"> </div>
 
+---
+
 🤝 Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
