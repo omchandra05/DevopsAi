@@ -42,7 +42,7 @@ A robust, containerized AI Chatbot application bridging a **Java Backend (Tomcat
 | **Frontend** | HTML5, CSS3 (Glassmorphism), Vanilla JS, Three.js |
 | **Server** | Apache Tomcat 9 |
 | **AI Model** | Google Gemini 1.5 Flash API |
-| **DevOps** | Docker, Docker Compose |
+| **DevOps** | Docker, Docker Compose, Github, Github Action |
 
 ---
 
