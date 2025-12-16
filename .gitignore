@@ -1,0 +1,19 @@
+# --- Maven Build Folder (Huge folder, never commit this) ---
+target/
+*.class
+
+# --- IDE Settings (VS Code / IntelliJ) ---
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+
+.env

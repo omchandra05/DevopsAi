@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NexusAI | Neural Interface</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <style>
+      :root {
+        /* Cyberpunk / Glass Palette */
+        --bg-color: #030305;
+        --glass-panel: rgba(20, 20, 28, 0.65);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-highlight: rgba(255, 255, 255, 0.03);
+
+        --primary: #6d28d9; /* Deep Purple */
+        --primary-glow: #8b5cf6;
+        --accent: #06b6d4; /* Cyan */
+
+        --text-main: #ffffff;
+        --text-muted: #94a3b8;
+
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        height: 100vh;
+        width: 100vw;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* --- LAYER 1: 3D BACKGROUND --- */
+      #canvas-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none; /* Let clicks pass through */
+      }
+
+      /* --- LAYER 2: UI DASHBOARD --- */
+      .dashboard-container {
+        position: relative;
+        z-index: 10;
+        width: 95%;
+        max-width: 1400px;
+        height: 90vh;
+        display: grid;
+        grid-template-columns: 280px 1fr; /* Sidebar + Chat */
+        gap: 20px;
+      }
+
+      /* --- SIDEBAR --- */
+      .sidebar {
+        background: var(--glass-panel);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        display: flex;
+        flex-direction: column;
+        padding: 25px;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-area {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+        color: var(--text-main);
+        text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+      }
+
+      .logo-area i {
+        color: var(--accent);
+      }
+
+      .nav-section {
+        flex: 1;
+        overflow-y: auto;
+      }
+      .nav-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        margin-bottom: 8px;
+        border-radius: var(--radius-sm);
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.9rem;
+        border: 1px solid transparent;
+      }
+
+      .nav-item:hover,
+      .nav-item.active {
+        background: var(--glass-highlight);
+        color: var(--text-main);
+        border-color: var(--glass-border);
+      }
+
+      .nav-item i {
+        font-size: 1.1rem;
+      }
+
+      .sidebar-footer {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--glass-border);
+      }
+
+      .user-profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius-sm);
+      }
+      .user-avatar {
+        width: 35px;
+        height: 35px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        border-radius: 50%;
+      }
+
+      /* --- MAIN CHAT AREA --- */
+      .chat-interface {
+        background: var(--glass-panel);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .chat-header {
+        padding: 20px 30px;
+        border-bottom: 1px solid var(--glass-border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .model-status {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #10b981; /* Green */
+        border-radius: 50%;
+        box-shadow: 0 0 10px #10b981;
+      }
+      .model-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+
+      .header-actions button {
+        background: transparent;
+        border: 1px solid var(--glass-border);
+        color: var(--text-main);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .header-actions button:hover {
+        background: var(--glass-highlight);
+      }
+
+      /* --- CHAT HISTORY (Dynamic) --- */
+      #chatBox {
+        flex: 1;
+        padding: 30px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      /* Welcome Placeholder (Design Only) */
+      .welcome-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        opacity: 0.7;
+      }
+      .welcome-icon {
+        font-size: 3rem;
+        color: var(--primary-glow);
+        margin-bottom: 20px;
+      }
+
+      /* Message Styles (Used by script.js) */
+      .message {
+        display: flex;
+        gap: 15px;
+        max-width: 85%;
+        animation: slideIn 0.3s ease;
+      }
+      .message.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+      }
+      .message.bot {
+        align-self: flex-start;
+      }
+
+      .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 0.9rem;
+      }
+      .bot .avatar {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--accent);
+      }
+      .user .avatar {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .bubble {
+        padding: 15px 20px;
+        border-radius: 18px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .bot .bubble {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: #e2e8f0;
+        border-top-left-radius: 4px;
+      }
+      .user .bubble {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-glow)
+        );
+        color: white;
+        border-top-right-radius: 4px;
+        box-shadow: 0 5px 15px rgba(109, 40, 217, 0.3);
+      }
+
+      /* --- INPUT AREA --- */
+      .input-wrapper {
+        padding: 25px;
+        background: rgba(0, 0, 0, 0.2);
+        border-top: 1px solid var(--glass-border);
+        position: relative;
+      }
+
+      .input-group {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md);
+        padding: 8px;
+        display: flex;
+        align-items: flex-end;
+        transition: 0.3s;
+      }
+      .input-group:focus-within {
+        border-color: var(--primary-glow);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      #userInput {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: white;
+        padding: 12px 15px;
+        font-family: "Inter", sans-serif;
+        font-size: 1rem;
+        resize: none;
+        max-height: 150px;
+        outline: none;
+      }
+
+      #sendBtn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #sendBtn:hover {
+        background: var(--primary-glow);
+        transform: scale(1.05);
+      }
+
+      /* --- MODAL (SYSTEM INSTRUCTIONS) --- */
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-content {
+        background: #111116;
+        border: 1px solid var(--glass-border);
+        width: 90%;
+        max-width: 600px;
+        padding: 30px;
+        border-radius: var(--radius-lg);
+        position: relative;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      }
+      .modal h2 {
+        margin-bottom: 20px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      #systemInstruction {
+        width: 100%;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: #fff;
+        padding: 15px;
+        border-radius: var(--radius-sm);
+        font-family: monospace;
+        resize: vertical;
+      }
+
+      .save-btn {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: var(--radius-sm);
+        margin-top: 20px;
+        cursor: pointer;
+        font-weight: 600;
+        width: 100%;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Mobile */
+      @media (max-width: 768px) {
+        .dashboard-container {
+          grid-template-columns: 1fr;
+          height: 100vh;
+          width: 100%;
+        }
+        .sidebar {
+          display: none; /* Hidden on mobile for now */
+        }
+        .chat-interface {
+          border-radius: 0;
+          border: none;
+        }
+      }
+      /* --- LOADING ANIMATION (Typing Dots) --- */
+      .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 0;
+      }
+
+      .typing-indicator span {
+        width: 6px;
+        height: 6px;
+        background-color: var(--accent); /* Uses your cyan color */
+        border-radius: 50%;
+        animation: blink 1.4s infinite both;
+        box-shadow: 0 0 5px var(--accent);
+      }
+
+      .typing-indicator span:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes blink {
+        0% {
+          opacity: 0.2;
+          transform: scale(0.8);
+        }
+        20% {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+        100% {
+          opacity: 0.2;
+          transform: scale(0.8);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo-area">
+          <i class="ri-cpu-line"></i> NEXUS<span style="font-weight: 300"
+            >AI</span
+          >
+        </div>
+
+        <div class="nav-section">
+          <span class="nav-label">Main</span>
+          <div class="nav-item active">
+            <i class="ri-chat-4-line"></i> New Chat
+          </div>
+          <div class="nav-item"><i class="ri-history-line"></i> History</div>
+
+          <span class="nav-label" style="margin-top: 20px">Configuration</span>
+          <div class="nav-item" id="openSettingsBtn">
+            <i class="ri-settings-4-line"></i> System Instructions
+          </div>
+          <div class="nav-item">
+            <i class="ri-database-2-line"></i> Model Parameters
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="user-profile">
+            <div class="user-avatar"></div>
+            <div style="font-size: 0.9rem">
+              <div style="font-weight: 600">Developer</div>
+              <div style="color: var(--text-muted); font-size: 0.75rem">
+                Online
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="chat-interface">
+        <div class="chat-header">
+          <div class="model-status">
+            <div class="status-dot"></div>
+            <span class="model-name">Gemini 2.5 Pro</span>
+          </div>
+          <div class="header-actions">
+            <button title="Clear Chat">
+              <i class="ri-delete-bin-line"></i>
+            </button>
+            <button title="Export"><i class="ri-download-line"></i></button>
+          </div>
+        </div>
+
+        <div id="chatBox">
+          <div class="welcome-screen">
+            <i class="ri-robot-2-line welcome-icon"></i>
+            <h2>System Online</h2>
+            <p style="color: var(--text-muted)">
+              The 3D environment is active. Waiting for input.
+            </p>
+          </div>
+        </div>
+
+        <div class="input-wrapper">
+          <div class="input-group">
+            <textarea
+              id="userInput"
+              rows="1"
+              placeholder="Type your instruction..."
+            ></textarea>
+            <button id="sendBtn"><i class="ri-send-plane-fill"></i></button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <button
+          class="close-modal"
+          id="closeSettingsBtn"
+          style="
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+          "
+        >
+          &times;
+        </button>
+        <h2><i class="ri-brain-line"></i> System Instructions</h2>
+        <p style="color: var(--text-muted); margin-bottom: 15px">
+          Define how the AI should behave (e.g., "You are a coding expert").
+        </p>
+
+        <textarea
+          id="systemInstruction"
+          placeholder="Enter system prompt here..."
+        ></textarea>
+
+        <button id="saveSettings" class="save-btn">
+          Initialize System Prompt
+        </button>
+      </div>
+    </div>
+
+    <script type="module">
+      import * as THREE from "three";
+      import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+      // Initialize 3D Scene
+      const container = document.getElementById("canvas-container");
+      const scene = new THREE.Scene();
+      // Add subtle fog for depth integration with UI
+      scene.fog = new THREE.FogExp2(0x030305, 0.02);
+
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      camera.position.z = 5;
+
+      const renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); // Soft light
+      const pointLight = new THREE.PointLight(0x6d28d9, 2, 50); // Purple glow
+      pointLight.position.set(2, 3, 4);
+      scene.add(ambientLight, pointLight);
+
+      // --- GLTF LOADER SETUP (Ready for your model) ---
+      const loader = new GLTFLoader();
+      // loader.load('path/to/model.glb', (gltf) => { scene.add(gltf.scene); });
+
+      // Placeholder Geometry (Delete this when adding your model)
+      const geometry = new THREE.TorusKnotGeometry(1.5, 0.4, 100, 16);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x333333,
+        wireframe: true,
+        emissive: 0x6d28d9,
+        emissiveIntensity: 0.5,
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      scene.add(mesh);
+
+      // Animation Loop
+      function animate() {
+        requestAnimationFrame(animate);
+        mesh.rotation.x += 0.003; // Rotate placeholder
+        mesh.rotation.y += 0.005;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize Handler
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    </script>
+
+    <script>
+      // Modal Toggles
+      const modal = document.getElementById("settingsModal");
+      document
+        .getElementById("openSettingsBtn")
+        .addEventListener("click", () => (modal.style.display = "flex"));
+      document
+        .getElementById("closeSettingsBtn")
+        .addEventListener("click", () => (modal.style.display = "none"));
+      document
+        .getElementById("saveSettings")
+        .addEventListener("click", () => (modal.style.display = "none"));
+
+      // Auto-resize textarea
+      const textarea = document.getElementById("userInput");
+      textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = this.scrollHeight + "px";
+      });
+    </script>
+
+    <script src="script.js"></script>
+  </body>
+</html>

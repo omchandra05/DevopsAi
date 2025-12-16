@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Om Chandra | NexusAI Developer</title>
+    <style>
+        /* --- 1. SHARED STYLES (MATCHING LANDING PAGE) --- */
+        :root {
+            --bg-dark: #050508;
+            --bg-panel: #101018;
+            --primary: #00f2ff; /* Cyan */
+            --secondary: #bc13fe; /* Purple */
+            --text-main: #ffffff;
+            --text-muted: #8b8b9e;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- 2. LAYOUT --- */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- 3. NAVBAR --- */
+        nav {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 60px;
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: #fff; }
+        .logo span { color: var(--primary); }
+        
+        .back-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .back-link:hover { color: var(--primary); }
+
+        /* --- 4. PROFILE SECTION --- */
+        .profile-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-top: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .profile-image-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* The Neon Image Styling */
+        .profile-img {
+            width: 350px;
+            height: 350px;
+            object-fit: cover; /* Ensures photo doesn't stretch */
+            border-radius: 20px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2), 
+                        10px 10px 0px rgba(188, 19, 254, 0.2); /* Offset shadow effect */
+            transition: transform 0.3s ease;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 242, 255, 0.4), 
+                        15px 15px 0px rgba(188, 19, 254, 0.4);
+        }
+
+        .profile-content h1 {
+            font-size: 3rem;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .profile-content h1 span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: rgba(0, 242, 255, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 242, 255, 0.2);
+        }
+
+        .bio-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        /* --- 5. TECH STACK GRID --- */
+        .tech-stack {
+            margin-top: 30px;
+        }
+        .tech-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        .tech-icons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .tech-tag {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tech-tag span { color: var(--accent); } /* Little dots */
+
+        /* --- 6. ANIMATION --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .profile-wrapper {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+            .profile-img { width: 250px; height: 250px; }
+            .tech-icons { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="index.html" class="logo">NEXUS<span>AI</span></a>
+            <a href="index.html" class="back-link">← Back to Home</a>
+        </nav>
+
+        <div class="profile-wrapper">
+            
+            <div class="profile-image-container">
+                <img src="Snapchat-287136530.jpg" alt="Om Chandra" class="profile-img">
+            </div>
+
+            <div class="profile-content">
+                <span class="role-badge">Lead Developer & Creator</span>
+                <h1>Hello, I'm <br><span>Om Chandra</span></h1>
+                
+                <p class="bio-text">
+                    I am a software engineer and the creator of <strong>NexusAI</strong>. 
+                    <br><br>
+                    I developed this project to push the boundaries of conversational interfaces. By integrating the advanced <strong>Gemini AI</strong> model, I built a chatbot that doesn't just respond statically but morphs its data structure and adapts to user instructions in real-time.
+                    <br><br>
+                    My focus is on creating responsive, dynamic web experiences that bridge the gap between complex AI logic and intuitive user design.
+                </p>
+
+                <div class="tech-stack">
+                    <div class="tech-title">Built With</div>
+                    <div class="tech-icons">
+                        <div class="tech-tag"><span style="color:var(--primary)">●</span> Gemini AI API</div>
+                        <div class="tech-tag"><span style="color:#e34c26">●</span> HTML5</div>
+                        <div class="tech-tag"><span style="color:#264de4">●</span> CSS3 (Neon UI)</div>
+                        <div class="tech-tag"><span style="color:#f0db4f">●</span> JavaScript</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 40px;">
+                    <a href="mailto:contact@omchandra.dev" class="back-link" style="color:#fff; border-bottom: 1px solid var(--primary);">Get in Touch</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
