@@ -109,8 +109,7 @@ gemini-chatbot/
 └── README.md                   # Documentation
 ```
 
-📸 Screenshots
-<div align="center"> <img src="https://via.placeholder.com/400x200?text=Mobile+View" alt="Mobile View" width="45%" style="border-radius:10px;"> <img src="https://via.placeholder.com/400x200?text=Settings+Panel" alt="Settings Panel" width="45%" style="border-radius:10px;"> </div>
+
 
 🤝 Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
