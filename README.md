@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧠 Gemini Neural Interface
+# 🧠 Gemini Chatbot With model training
 ### A Full-Stack AI Chatbot with Dynamic Personas & 3D UI
 
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
@@ -11,12 +11,12 @@
 
 <br />
 
-<img src="./screenshot.png" alt="Project Screenshot" width="800" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+<img src="./Screenshot.png" alt="Project Screenshot" width="800" style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
 
 <br />
 <br />
 
-A robust, containerized AI Chatbot application bridging a **Java Backend (Tomcat 9)** with a **Cyberpunk Frontend**. Powered by Google's **Gemini 1.5 Flash** model, it features real-time dynamic system instructions, allowing the AI to switch personas (e.g., Pirate, Chef, DevOps Expert) instantly.
+A robust, containerized AI Chatbot application bridging a **Java Backend (Tomcat 9)** with a **Cyberpunk Frontend**. Powered by Google's **Gemini 2.5 Flash** model, it features real-time dynamic system instructions, allowing the AI to switch personas (e.g., Pirate, Chef, DevOps Expert) instantly.
 
 [View Demo](#) · [Report Bug](#) · [Request Feature](#)
 
@@ -38,7 +38,7 @@ A robust, containerized AI Chatbot application bridging a **Java Backend (Tomcat
 
 | Component | Technology |
 | :--- | :--- |
-| **Backend** | Java 11, Jakarta EE Servlets, Apache Maven |
+| **Backend** | Java 11, Java Servlet API, Apache Maven |
 | **Frontend** | HTML5, CSS3 (Glassmorphism), Vanilla JS, Three.js |
 | **Server** | Apache Tomcat 9 |
 | **AI Model** | Google Gemini 1.5 Flash API |
@@ -57,7 +57,7 @@ A robust, containerized AI Chatbot application bridging a **Java Backend (Tomcat
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/gemini-chatbot.git](https://github.com/YOUR_USERNAME/gemini-chatbot.git)
+    git clone https://github.com/YOUR_USERNAME/gemini-chatbot.git
     cd gemini-chatbot
     ```
 
@@ -103,14 +103,14 @@ gemini-chatbot/
 │   ├── main/
 │   │   ├── java/com/chatbot/   # Java Servlet Logic (Backend)
 │   │   └── webapp/             # HTML, CSS, JS, Assets (Frontend)
+├── target/                     # Build output (generated)
 ├── Dockerfile                  # Multi-stage Docker build instruction
 ├── pom.xml                     # Maven Dependencies
 └── README.md                   # Documentation
-
-
+```
 
 📸 Screenshots
-<div align="center"> <img src="https://www.google.com/search?q=https://via.placeholder.com/400x200%3Ftext%3DMobile%2BResponsive" alt="Mobile View" width="45%"> <img src="https://www.google.com/search?q=https://via.placeholder.com/400x200%3Ftext%3DSettings%2BPanel" alt="Settings Panel" width="45%"> </div>
+<div align="center"> <img src="https://via.placeholder.com/400x200?text=Mobile+View" alt="Mobile View" width="45%" style="border-radius:10px;"> <img src="https://via.placeholder.com/400x200?text=Settings+Panel" alt="Settings Panel" width="45%" style="border-radius:10px;"> </div>
 
 🤝 Contributing
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
@@ -126,6 +126,6 @@ Push to the Branch (git push origin feature/AmazingFeature)
 Open a Pull Request
 
 📝 License
-Distributed under the MIT License. See LICENSE for more information.
+Distributed under the MIT License.
 
 <div align="center"> Made with ❤️ by <b>Om Chandra</b> </div>
