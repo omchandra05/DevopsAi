@@ -1,16 +1,19 @@
-# 1. Use Tomcat 9 with Java 11
-FROM tomcat:9.0-jdk11-openjdk
+# --- Stage 1: Build the Code (Maven) ---
+FROM maven:3.9.6-eclipse-temurin-11 AS build
+WORKDIR /app
 
-# 2. Clear default Tomcat apps (Manager, Docs, etc.)
-RUN rm -rf /usr/local/tomcat/webapps/*
+# Copy all your project files into the builder
+COPY . .
 
-# 3. COPY YOUR SPECIFIC FILE
-# We take 'target/chatbot.war' and rename it to 'ROOT.war' inside the container.
-# This makes your app available at localhost:8080 (without /chatbot/)
-COPY target/chatbot.war /usr/local/tomcat/webapps/ROOT.war
+# Run the build (this creates target/chatbot.war)
+RUN mvn clean package -DskipTests
 
-# 4. Expose Port
+# --- Stage 2: Run the App (Tomcat) ---
+FROM tomcat:9.0-jdk11-openjdk-slim
+
+# Copy ONLY the built WAR file from the first stage
+# We rename it to ROOT.war so your app runs at the root URL (localhost:8080/)
+COPY --from=build /app/target/chatbot.war /usr/local/tomcat/webapps/ROOT.war
+
 EXPOSE 8080
-
-# 5. Run
 CMD ["catalina.sh", "run"]
